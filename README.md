@@ -3,20 +3,23 @@ System to manage all information for campuses, that is Students, Lecturers, Staf
 
 ## Set Up.
 
-This program is a maven java application. Therefore, you will need to have `maven` installed. You also need to have a minimum of Java version 8 installed. You should also have a database installed, preferrably postgres and input your database details in the hibernate.cfg.xml.
+This program is a maven java application. Therefore, you will need to have `maven` installed. You also need to have a minimum of `Java version 8` installed. You should also have a database installed, preferrably `postgres` and input your database details in the `hibernate.cfg.xml`.
 
 You will need to create a database before running this application.
 
 ### Creating the database.
 If you are using postgres database, which is the recommended, then you can create a database using the following command:
 > psql
-> `postgres=#` > CREATE DATABASE campus;
+
+> `postgres=#` CREATE DATABASE campus;
 
 ### Installing dependencies.
 
 You can install dependencies by running the command:
 > mvn install
+
 or
+
 > mvn packages
 
 ### Running migrations

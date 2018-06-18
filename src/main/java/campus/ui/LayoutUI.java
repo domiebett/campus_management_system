@@ -11,6 +11,9 @@ import campus.ui.layout.SidePanel;
 
 public class LayoutUI extends JPanel {
 	
+	/**
+	 * JPanel that holds different parts of the UI together.
+	 */
 	private static HeaderPanel headerPanel;
 	private static SidePanel sidePanel;
 	private static JPanel contentPanel;

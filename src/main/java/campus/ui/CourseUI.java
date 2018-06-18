@@ -1,9 +1,9 @@
 package campus.ui;
 
 import java.awt.BorderLayout;
-import java.awt.CardLayout;
 import java.awt.Color;
-import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 
 import javax.swing.BoxLayout;
@@ -13,16 +13,15 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.MatteBorder;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-
 import campus.models.Course;
 import campus.queries.CourseQuery;
 
 public class CourseUI extends JPanel {
-	
+	/**
+	 * JPanel that holds a listing of all courses.
+	 */
 	static JPanel panel;
-	static JPanel contentPanel;
+	static JPanel bodyPanel;
 	static JPanel footerPanel;
 	static JLabel nameLabel;
 	static JLabel codeLabel;
@@ -35,18 +34,16 @@ public class CourseUI extends JPanel {
 	static JButton cancelButton;
 	
 	BorderLayout borderLayout = new BorderLayout();
-    
-    public CourseUI() { }
-	
-	public CourseUI(Session session) {
+    	
+	public CourseUI() {
 		setLayout(borderLayout);
         
-        contentPanel = new JPanel();
+        bodyPanel = new JPanel();
         footerPanel = new JPanel();
         
-        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+        bodyPanel.setLayout(new BoxLayout(bodyPanel, BoxLayout.Y_AXIS));
         
-        List<Course> courses = CourseQuery.getAllCourses(session);
+        List<Course> courses = new CourseQuery().getAllCourses();
         for (Course course : courses) {
 			holderLabel = new JLabel();
 			JPanel holderPanel = new JPanel() {
@@ -63,33 +60,19 @@ public class CourseUI extends JPanel {
 			holderLabel.setText(courseTitle);
 			holderPanel.add(holderLabel, BorderLayout.WEST);
 			
-			contentPanel.add(holderPanel);
+			bodyPanel.add(holderPanel);
 		};
 		
 		addCourseButton = new JButton("Add Course");
+		addCourseButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ContentPanel contentPanel = (ContentPanel) getParent();
+				contentPanel.display(new AddCourseUI(), "add course");
+			}
+		});
 		footerPanel.add(addCourseButton);
         
-        add(contentPanel, BorderLayout.CENTER);
+        add(bodyPanel, BorderLayout.CENTER);
         add(footerPanel, BorderLayout.SOUTH);
 	}
-	
-	private static void getAddCourseUI() {
-		nameLabel = new JLabel("Name: ");
-		nameTextField = new JTextField();
-		
-		codeLabel = new JLabel("Code: ");
-		codeTextField = new JTextField();
-		
-		submitButton = new JButton("Submit");
-		cancelButton = new JButton("Cancel");
-	}
-	
-	private static void deleteCourseConfirmation() {
-		
-	}
-	
-	private static void addCourseConfirmation() {
-		
-	}
-	
 }

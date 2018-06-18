@@ -11,27 +11,54 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.exception.ConstraintViolationException;
 
 import campus.models.Course;
+import hibernate.HibernateUtils;
 
 public class CourseQuery {
 	
-	public CourseQuery() { }
+	static SessionFactory factory = HibernateUtils.getSessionFactory();
+	private static Session session = factory.getCurrentSession();
 	
-	// Gets a single course.
-	public static Course getSingleCourse(Session session, Integer id) {
+	public CourseQuery() {
+		try {
+			session.getTransaction().begin();
+		} catch (IllegalStateException e) {
+			System.out.println("Transaction is already active");
+		}
+	}
+	
+	/**
+	 * Gets a single course from database
+	 * 
+	 * @param id - primary key for the course
+	 * 
+	 * @return Course
+	 */
+	public static Course getSingleCourse(Integer id) {
 		Course course = (Course) session.get(Course.class, id);
 		return course;
 	}
 	
-	// Gets all courses from db.
-	public static List<Course> getAllCourses(Session session) {
+	/**
+	 * Gets all courses from the db
+	 * 
+	 * @return List<Course>
+	 */
+	public List<Course> getAllCourses() {
 		List<Course> courses = session.createQuery( "from Course" ).list();
 		return courses;
 	}
 	
-	// Gets courses depending on filters passed.
-	public static List<Course> getFilteredCourses(Session session, HashMap<String, String> filters) {
+	/**
+	 * Gets filtered courses depending on filters passed
+	 * 
+	 * @param filters
+	 * @return List<Course>
+	 */
+	public List<Course> getFilteredCourses(HashMap<String, String> filters) {
 		
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Course> query = builder.createQuery(Course.class);
@@ -58,10 +85,38 @@ public class CourseQuery {
 		return courses;
 	}
 	
-	// Adds a course to db.
-	public static Course addCourse(Session session, String name, String code) {
+	/**
+	 * Adds a course to the db using provided name and code
+	 * 
+	 * @param name
+	 * @param code
+	 * 
+	 * @return Course
+	 */
+	public Course addCourse(String name, String code) {
 		Course course = new Course(name, code);
-		session.save(course);
+		try {
+			session.save(course);
+		} catch (ConstraintViolationException e) {
+			System.out.println("You have entered a duplicate value");
+			session.getTransaction().rollback();
+			initializeSession();
+		} catch (Exception e) {
+			System.out.println("An error occured");
+			e.printStackTrace();
+			session.getTransaction().rollback();
+			initializeSession();
+		}
+		
 		return course;
+	}
+	
+	public void initializeSession() {
+		try {
+			session = factory.getCurrentSession();
+			session.getTransaction().begin();
+		} catch (Exception e) {
+			System.out.println("Session exists");
+		}
 	}
 }

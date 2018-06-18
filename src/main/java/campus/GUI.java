@@ -6,7 +6,6 @@ import javax.swing.WindowConstants;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
-import campus.ui.CourseUI;
 import campus.ui.LayoutUI;
 import hibernate.HibernateUtils;
 
@@ -14,11 +13,10 @@ public class GUI {
 	
 	static JFrame frame;
 	
-	public static JFrame createFrame(Session session) {
+	public static JFrame createFrame() {
 		
 		frame = new JFrame( "Campus Management System" );
 		
-//		frame.add(new CourseUI(session));
 		frame.add(new LayoutUI());
 		
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);

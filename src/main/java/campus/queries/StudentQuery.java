@@ -11,15 +11,22 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 
 import campus.models.Course;
 import campus.models.Student;
+import hibernate.HibernateUtils;
 
 public class StudentQuery {
 	
-	public StudentQuery() { }
+	private static Session session;
 	
-	public static Student addStudent(Session session, Course course, String regNo, String firstName, String lastName, String surname) {
+	public StudentQuery() {
+		SessionFactory factory = HibernateUtils.getSessionFactory();
+		session = factory.getCurrentSession();
+	}
+	
+	public static Student addStudent(Course course, String regNo, String firstName, String lastName, String surname) {
 		Student student = new Student(regNo, firstName, lastName, surname);
 		student.setCourse(course);
 		course.getStudents().add(student);
@@ -27,17 +34,17 @@ public class StudentQuery {
 		return student;
 	}
 	
-	public static List<Student> getAllStudents(Session session) {
+	public static List<Student> getAllStudents() {
 		List<Student> students = session.createQuery( "from Student" ).list();
 		return students;
 	}
 	
-	public static Student getSingleStudent(Session session, Integer id) {
+	public static Student getSingleStudent(Integer id) {
 		Student student = (Student) session.get(Student.class, id);
 		return student;
 	}
 	
-	public static List<Student> getFilteredStudents(Session session, HashMap<String, String> filters) {
+	public static List<Student> getFilteredStudents(HashMap<String, String> filters) {
 
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Student> query = builder.createQuery(Student.class);

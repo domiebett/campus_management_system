@@ -9,7 +9,7 @@ import org.hibernate.exception.ConstraintViolationException;
 import campus.queries.CourseQuery;
 import hibernate.HibernateUtils;
 
-public class App {
+public class App { 
 	
 	public static void main(String[] args) {
 		
@@ -19,7 +19,8 @@ public class App {
 		try {
 			session.getTransaction().begin();
 			CourseQuery courseQuery = new CourseQuery();
-			courseQuery.addCourse(session, "Bachelor of Criminology", "BCR");
+//			courseQuery.addCourse(session, "Bachelor of Criminology", "BCR");
+//			courseQuery.addCourse(session, "Bachelor of Computer Science", "BCS");
 			
 			GUI.createFrame(session);
 			

@@ -7,6 +7,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import campus.ui.CourseUI;
+import campus.ui.LayoutUI;
 import hibernate.HibernateUtils;
 
 public class GUI {
@@ -17,7 +18,8 @@ public class GUI {
 		
 		frame = new JFrame( "Campus Management System" );
 		
-		frame.add(new CourseUI(session));
+//		frame.add(new CourseUI(session));
+		frame.add(new LayoutUI());
 		
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		frame.setVisible(true);
